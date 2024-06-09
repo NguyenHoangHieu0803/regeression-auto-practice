@@ -1,24 +1,37 @@
 package test;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import common.Browser;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import pages.LoginPage;
+
+import static common.Browser.getCurrentUrl;
+import static common.Browser.getDriver;
+import static pages.LoginPage.loginUsingStandardUser;
 
 public class LoginTest {
 
-    //login sucessfully with standard user https://www.saucedemo.com/
+    LoginPage loginPage;
+
+    @BeforeClass
+    void setup(){
+        Browser.openBrowser("chrome");
+        Browser.visit("https://www.saucedemo.com");
+        getDriver().manage().window().maximize();
+        loginPage = new LoginPage();
+    }
 
     @Test
     void loginSuccessStandardUser () {
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.saucedemo.com/");
+        loginUsingStandardUser();
+        Assert.assertTrue(getCurrentUrl().equals("https://www.saucedemo.com/inventory.html"));
 
-        driver.findElement(By.xpath("//input[@placeholder=\"Username\"]")).sendKeys("standard_user");
-        driver.findElement(By.xpath("//input[@placeholder=\"Password\"]")).sendKeys("secret_sauce");
-
-        driver.findElement(By.xpath("//input[@type=\"submit\"]")).click();
-        Assert.assertTrue(driver.getCurrentUrl().equals("https://www.saucedemo.com/inventory.html"));
     }
+
+//    @Test
+//    void loginSuccessOtherUser () {
+//
+//    }
 }
